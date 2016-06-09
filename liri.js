@@ -48,6 +48,10 @@ function mytweets() {
     }
   });
 }
+//grabs spotify songs
+function spotifysong() {
+	
+}
 //grabs movie information from omdb
 function moviethis() {
 

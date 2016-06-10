@@ -3,7 +3,7 @@ var keys = require('./keys.js');
 //loads twitter
 var Twitter = require('twitter');
 //loads spotify
-var Spotify = require('spotify');
+var spotify = require('spotify');
 //arguments
 var arg1 = process.argv[2];
 var arg2 = process.argv[3];
@@ -31,10 +31,10 @@ function start(arg1,arg2) {
 }
 //loads tweets from twitter
 function mytweets() {
-	
+	//gets twitter app keys
 	var client = new Twitter(keys.twitterKeys);
-
-	client.get('statuses/user_timeline', { screen_name: 'emsems12', count: 20 }, function(error, tweets, response) {
+	var params = { screen_name: 'emsems12', count: 20 };
+	client.get('statuses/user_timeline', params , function(error, tweets, response) {
 
     if (!error) {
     	
@@ -44,13 +44,34 @@ function mytweets() {
   		}
     }
     else {
-      	console.log('There is an error: ' + error);
+      	console.log(JSON.stringify(error));
     }
   });
 }
 //grabs spotify songs
 function spotifysong() {
-	
+	//songname = "";
+
+
+	// if (arg2 === undefined) {
+	// 	songname = "what's my age again";
+	// }
+	var value = arg2 || "what's my age again";
+	spotify.search({ type: 'track', query: value }, function(err, data) {
+	    if ( !err ) {
+
+	    	// console.log(data);
+	    	console.log('-----Spotify Results-----')
+	        console.log('Artist(s): ' + data.tracks.items[0].artists[0].name)
+	        console.log('Song Name: ' + data.tracks.items[0].name);
+	        console.log('Preview Link: ' + data.tracks.items[0].preview_url);
+	        console.log('Album: ' + data.tracks.items[0].album.name);
+	    }
+	    else {
+	    	console.log('There is an error: ' + err);
+	        return;
+	    }
+	});
 }
 //grabs movie information from omdb
 function moviethis() {
@@ -59,13 +80,18 @@ function moviethis() {
 	//loops through movies entered in console
 	for (var i = 3; i < args.length; i++){
 
-   	 	if (i>3 && i< args.length){
+   	 	if (i > 3 && i < args.length){
 			moviename = moviename + "+" + args[i];
    		}
 		else {
         	moviename = moviename + args[i];
     	}
 	}
+
+	if (arg2 === undefined) {
+  			moviename = "Mr. Nobody";
+	
+  		}
 	//pulling from the omdb api
 	var options = {
 		url: 'http://www.omdbapi.com/',
@@ -81,6 +107,7 @@ function moviethis() {
 	request(options, function(error, response, body) {
   		if (!error && response.statusCode == 200) {
     		b = JSON.parse(body)
+    		console.log('-----OMDB Results-----')
     		console.log('Title: ' + b.Title);
     		console.log('Year: ' + b.Year);
     		console.log('IMDB Rating: ' + b.imdbRating);
@@ -91,7 +118,12 @@ function moviethis() {
     		console.log('Rotten Tomatoes Rating: ' + b.tomatoRating);
     		console.log('Rotten Tomatoes URL: ' + b.tomatoURL);
   		}
+  		else {
+  			console.log('There is an error: ' + err);
+	        return;
+  		}
+  		
 	})
 }
 
-start(arg1,arg2)
+start(arg1,arg2);

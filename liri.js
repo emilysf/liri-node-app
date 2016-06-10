@@ -50,14 +50,12 @@ function mytweets() {
 }
 //grabs spotify songs
 function spotifysong() {
-	//songname = "";
 
+	if (arg2 === undefined) {
+		arg2 = "what's my age again";
+	}
 
-	// if (arg2 === undefined) {
-	// 	songname = "what's my age again";
-	// }
-	var value = arg2 || "what's my age again";
-	spotify.search({ type: 'track', query: value }, function(err, data) {
+	spotify.search({ type: 'track', query: arg2 }, function(err, data) {
 	    if ( !err ) {
 
 	    	// console.log(data);

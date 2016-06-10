@@ -57,7 +57,6 @@ function spotifysong() {
 
 	spotify.search({ type: 'track', query: arg2 }, function(err, data) {
 	    if ( !err ) {
-
 	    	// console.log(data);
 	    	console.log('-----Spotify Results-----')
 	        console.log('Artist(s): ' + data.tracks.items[0].artists[0].name)
@@ -66,7 +65,7 @@ function spotifysong() {
 	        console.log('Album: ' + data.tracks.items[0].album.name);
 	    }
 	    else {
-	    	console.log('There is an error: ' + err);
+	    	console.log(JSON.stringify(error));
 	        return;
 	    }
 	});
@@ -117,11 +116,33 @@ function moviethis() {
     		console.log('Rotten Tomatoes URL: ' + b.tomatoURL);
   		}
   		else {
-  			console.log('There is an error: ' + err);
+  			console.log(JSON.stringify(error));
 	        return;
   		}
   		
 	})
 }
+
+function dowhat() {
+
+	fs.readFile("random.txt", "utf8", function(error, data) {
+		
+		if (!error) {
+		    // makes array of data
+		    var args = data.split(',');
+		    console.log(args)
+		    // store arguments as var defined in switch function
+		 	arg1 = args[0];
+		 	arg2 = args[1];
+		 	start();
+		}
+		else {
+			console.log(JSON.stringify(error));
+		}
+
+	})
+}
+
+
 
 start(arg1,arg2);
